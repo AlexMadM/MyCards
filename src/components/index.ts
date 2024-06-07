@@ -1,4 +1,5 @@
 export * from './auth'
-// export * from './decks'
+export * from './decks'
 export * from './profile'
 export * from './ui'
+export * from './control'

@@ -36,8 +36,8 @@ export const RadioGroup = forwardRef<ElementRef<typeof RadioG.Root>, RadioGroupP
 )
 
 export const RadioGroupRoot = forwardRef<
-  React.ElementRef<typeof RadioG.Root>,
-  React.ComponentPropsWithoutRef<typeof RadioG.Root>
+  ElementRef<typeof RadioG.Root>,
+  ComponentPropsWithoutRef<typeof RadioG.Root>
 >(({ className, ...props }, ref) => {
   return <RadioG.Root className={clsx(s.root, className)} {...props} ref={ref} />
 })
