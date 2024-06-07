@@ -11,5 +11,5 @@ export const flashcardsApi = createApi({
   endpoints: () => ({}),
 
   reducerPath: 'flashcardsApi',
-  tagTypes: ['Decks'],
+  tagTypes: ['Decks', 'Me'],
 })

@@ -7,11 +7,7 @@ import {
 } from 'react-router-dom'
 
 import { DecksTable } from '@/components/decks/decks-table'
-
-// import { Layout, useAuthContext } from '@/components/layout'
-// import { DeckPage } from '@/pages/deck-page/deck-page'
-
-// import { DecksPage, SignInPage } from './pages'
+import { Layout, useAuthContext } from '@/components/layout'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -45,7 +41,7 @@ const router = createBrowserRouter([
       },
       ...publicRoutes,
     ],
-    // element: <Layout />,
+    element: <Layout />,
   },
 ])
 
@@ -54,8 +50,7 @@ export const Router = () => {
 }
 
 function PrivateRoutes() {
-  // const { isAuthenticated } = useAuthContext()
-  const isAuthenticated = true
+  const { isAuthenticated } = useAuthContext()
 
   return isAuthenticated ? <Outlet /> : <Navigate to={'/login'} />
 }
