@@ -1,11 +1,9 @@
 import {
   CreateDeckArgs,
   Deck,
-  DecksListResponse,
-  DeleteDeckArgs,
   GetDecksArgs,
   UpdateDeckArgs,
-} from '@/components/decks/decks.types'
+} from '@/services/decks/decks/decks.types'
 import { flashcardsApi } from '@/services/flashcards-api'
 
 export const decksService = flashcardsApi.injectEndpoints({
@@ -19,14 +17,14 @@ export const decksService = flashcardsApi.injectEndpoints({
           url: 'v1/decks',
         }),
       }),
-      deleteDeck: builder.mutation<void, DeleteDeckArgs>({
+      deleteDeck: builder.mutation<void, Deck>({
         invalidatesTags: ['Decks'],
         query: ({ id }) => ({
           method: 'DELETE',
           url: `/v1/decks/${id}`,
         }),
       }),
-      getDecks: builder.query<DecksListResponse, GetDecksArgs | void>({
+      getDecks: builder.query<Deck, GetDecksArgs | void>({
         providesTags: ['Decks'],
         query: args => ({ method: 'Get', params: args ?? undefined, url: `v2/decks` }),
       }),
