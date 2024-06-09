@@ -1,47 +1,124 @@
+import { baseApi } from '@/services/base-api'
 import {
+  CardsResponse,
   CreateDeckArgs,
-  Deck,
+  DeckResponse,
+  DecksResponse,
   GetDecksArgs,
   UpdateDeckArgs,
 } from '@/services/decks/decks/decks.types'
-import { flashcardsApi } from '@/services/flashcards-api'
+import { RootState } from '@/services/store'
+import { getValuable } from '@/utils/get-valuable'
 
-export const decksService = flashcardsApi.injectEndpoints({
-  endpoints: builder => {
-    return {
-      createDeck: builder.mutation<Deck, CreateDeckArgs>({
-        invalidatesTags: ['Decks'],
-        query: args => ({
-          body: args,
-          method: 'POST',
-          url: 'v1/decks',
-        }),
+const decksService = baseApi.injectEndpoints({
+  endpoints: builder => ({
+    createDeck: builder.mutation<DeckResponse, CreateDeckArgs>({
+      invalidatesTags: ['Decks'],
+      async onQueryStarted(_, { dispatch, getState, queryFulfilled }) {
+        const res = await queryFulfilled
+
+        for (const { endpointName, originalArgs } of decksService.util.selectInvalidatedBy(
+          getState(),
+          [{ type: 'Decks' }]
+        )) {
+          if (endpointName !== 'getDecks') {
+            continue
+          }
+          dispatch(
+            decksService.util.updateQueryData(endpointName, originalArgs, draft => {
+              draft.items.unshift(res.data)
+            })
+          )
+        }
+      },
+      query: body => ({
+        body,
+        method: 'POST',
+        url: `v1/decks`,
       }),
-      deleteDeck: builder.mutation<void, Deck>({
-        invalidatesTags: ['Decks'],
-        query: ({ id }) => ({
-          method: 'DELETE',
-          url: `/v1/decks/${id}`,
-        }),
+    }),
+    deleteDeck: builder.mutation<void, { id: string }>({
+      invalidatesTags: ['Decks'],
+      query: ({ id }) => ({
+        method: 'DELETE',
+        url: `v1/decks/${id}`,
       }),
-      getDecks: builder.query<Deck, GetDecksArgs | void>({
-        providesTags: ['Decks'],
-        query: args => ({ method: 'Get', params: args ?? undefined, url: `v2/decks` }),
+    }),
+    getDeckById: builder.query<DeckResponse, { id: string }>({
+      query: ({ id }) => `v1/decks/${id}`,
+    }),
+    getDeckCards: builder.query<CardsResponse, { id: string }>({
+      query: ({ id }) => `v1/decks/${id}/cards`,
+    }),
+    getDecks: builder.query<DecksResponse, GetDecksArgs | void>({
+      providesTags: ['Decks'],
+      query: args => {
+        return {
+          params: args ? getValuable(args) : undefined,
+          url: `v1/decks`,
+        }
+      },
+    }),
+    toggleFavorite: builder.mutation<void, { deckId: string; favorite: boolean }>({
+      invalidatesTags: ['Decks'],
+      query: ({ deckId, favorite }) => ({
+        method: favorite ? 'POST' : 'DELETE',
+        url: `v1/decks/${deckId}/favorite`,
       }),
-      updateDeck: builder.mutation<void, UpdateDeckArgs>({
-        invalidatesTags: ['Decks'],
-        query: ({ id, ...rest }) => ({
-          body: rest,
-          method: 'PATCH',
-          url: `/v1/decks/${id}`,
-        }),
+    }),
+    updateDeck: builder.mutation<DeckResponse, UpdateDeckArgs>({
+      invalidatesTags: ['Decks'],
+      async onQueryStarted({ id, ...patch }, { dispatch, getState, queryFulfilled }) {
+        const state = getState() as RootState
+
+        const minCardsCount = state.decks.minCards
+        const search = state.decks.search
+        const currentPage = state.decks.currentPage
+        const maxCardsCount = state.decks.maxCards
+        const authorId = state.decks.authorId
+
+        const patchResult = dispatch(
+          decksService.util.updateQueryData(
+            'getDecks',
+            {
+              authorId,
+              currentPage,
+              maxCardsCount,
+              minCardsCount,
+              name: search,
+            },
+            draft => {
+              const deck = draft.items.find(deck => deck.id === id)
+
+              if (!deck) {
+                return
+              }
+              Object.assign(deck, patch)
+            }
+          )
+        )
+
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+        }
+      },
+      query: ({ id, ...body }) => ({
+        body,
+        method: 'PATCH',
+        url: `v1/decks/${id}`,
       }),
-    }
-  },
+    }),
+  }),
 })
+
 export const {
   useCreateDeckMutation,
   useDeleteDeckMutation,
+  useGetDeckByIdQuery,
+  useGetDeckCardsQuery,
   useGetDecksQuery,
+  useToggleFavoriteMutation,
   useUpdateDeckMutation,
 } = decksService

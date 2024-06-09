@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form'
 // import { Link } from 'react-router-dom'
 
+import { Link } from 'react-router-dom'
+
 import { Button, Card, Typography } from '@/components'
 import { ControlledCheckbox } from '@/components/control/controlled-checkbox'
 import { ControlledTextField } from '@/components/control/controlled-text-field'
@@ -62,9 +64,9 @@ export const SignIn = (props: Props) => {
             position={'left'}
           />{' '}
           <Typography
-            // as={Link}
+            as={Link}
             className={s.recoverPasswordLink}
-            // to={'/recover-password'}
+            to={'/recover-password'}
             variant={'body2'}
           >
             Forgot Password?
@@ -76,12 +78,7 @@ export const SignIn = (props: Props) => {
         <Typography className={s.caption} variant={'body2'}>
           {`Don't have an account?`}
         </Typography>
-        <Typography
-          // as={Link}
-          className={s.signUpLink}
-          // to={'/sign-up'}
-          variant={'link1'}
-        >
+        <Typography as={Link} className={s.signUpLink} to={'/sign-up'} variant={'link1'}>
           Sign Up
         </Typography>
       </Card>

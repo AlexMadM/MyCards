@@ -6,16 +6,18 @@ import {
   createBrowserRouter,
 } from 'react-router-dom'
 
-import { DecksTable } from '@/components/decks/decks-table'
 import { Layout, useAuthContext } from '@/components/layout'
+import { DeckPage } from '@/pages/deck-page/deck-page'
+import { DecksPage } from '@/pages/decks-page/decks-page'
+import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
 
 const publicRoutes: RouteObject[] = [
   {
     children: [
-      // {
-      //   element: <SignInPage />,
-      //   path: '/login',
-      // },
+      {
+        element: <SignInPage />,
+        path: '/login',
+      },
     ],
     element: <Outlet />,
   },
@@ -23,13 +25,13 @@ const publicRoutes: RouteObject[] = [
 
 const privateRoutes: RouteObject[] = [
   {
-    element: <DecksTable />,
+    element: <DecksPage />,
     path: '/',
   },
-  // {
-  //   element: <DeckPage />,
-  //   path: '/decks/:deckId',
-  // },
+  {
+    element: <DeckPage />,
+    path: '/decks/:deckId',
+  },
 ]
 
 const router = createBrowserRouter([

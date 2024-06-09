@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 
 import { Button, Card, Typography } from '@/components'
 import { ControlledTextField } from '@/components/control/controlled-text-field'
@@ -52,12 +53,7 @@ export const RecoverPassword = (props: Props) => {
         <Typography className={s.caption} variant={'body2'}>
           Did you remember your password?
         </Typography>
-        <Typography
-          //as={Link}
-          className={s.loginLink}
-          // to={'/sign-in'}
-          variant={'link1'}
-        >
+        <Typography as={Link} className={s.loginLink} to={'/sign-in'} variant={'link1'}>
           Try logging in
         </Typography>
       </Card>
