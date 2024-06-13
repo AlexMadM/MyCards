@@ -10,6 +10,7 @@ import { Layout, useAuthContext } from '@/components/layout'
 import { DeckPage } from '@/pages/deck-page/deck-page'
 import { DecksPage } from '@/pages/decks-page/decks-page'
 import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
+import {LearnCardsPage} from "@/pages/learn-cards-page";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -31,6 +32,9 @@ const privateRoutes: RouteObject[] = [
   {
     element: <DeckPage />,
     path: '/decks/:deckId',
+  }, {
+    element: <LearnCardsPage />,
+    path: '/decks/:deckId/learn',
   },
 ]
 

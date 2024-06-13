@@ -3,7 +3,7 @@ import { Outlet, useOutletContext } from 'react-router-dom'
 
 import { Header, HeaderProps } from '@/components/layout/header'
 import { Spinner } from '@/components/ui/spinner'
-import { useMeQuery } from '@/services/auth/auth.service'
+import { useLogoutMutation, useMeQuery } from '@/services/auth/auth.service'
 
 import s from './layout.module.scss'
 
@@ -18,6 +18,7 @@ export function useAuthContext() {
 export const Layout = () => {
   const { data, isError, isLoading } = useMeQuery()
   const isAuthenticated = !isError && !isLoading
+  const [onLogout] = useLogoutMutation()
 
   if (isLoading) {
     return <Spinner fullScreen />
@@ -28,7 +29,7 @@ export const Layout = () => {
       avatar={data?.avatar ?? null}
       email={data?.email ?? ''}
       isLoggedIn={isAuthenticated}
-      onLogout={() => {}}
+      onLogout={onLogout}
       userName={data?.name ?? ''}
     >
       <Outlet context={{ isAuthenticated } satisfies AuthContext} />

@@ -1,11 +1,12 @@
 import { baseApi } from '@/services/base-api'
 import {
+  CardResponse,
   CardsResponse,
-  CreateDeckArgs,
+  CreateDeckArgs, Deck,
   DeckResponse,
   DecksResponse,
-  GetDecksArgs,
-  UpdateDeckArgs,
+  GetDecksArgs, GetRandomCardArgs,
+  UpdateDeckArgs, UpdateGradeArgs,
 } from '@/services/decks/decks/decks.types'
 import { RootState } from '@/services/store'
 import { getValuable } from '@/utils/get-valuable'
@@ -36,12 +37,24 @@ const decksService = baseApi.injectEndpoints({
         method: 'POST',
         url: `v1/decks`,
       }),
+    }),updateGrade: builder.mutation<CardResponse, UpdateGradeArgs>({
+      invalidatesTags: ['Cards'],
+      query: ({ id, ...args }) => ({
+        body: args,
+        method: 'POST',
+        url: `/v1/decks/${id}/learn`,
+      }),
     }),
     deleteDeck: builder.mutation<void, { id: string }>({
       invalidatesTags: ['Decks'],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `v1/decks/${id}`,
+      }),
+    }),getDeck: builder.query<Deck, { id: string }>({
+      providesTags: ['Deck'],
+      query: ({ id }) => ({
+        url: `/v1/decks/${id}`,
       }),
     }),
     getDeckById: builder.query<DeckResponse, { id: string }>({
@@ -65,9 +78,15 @@ const decksService = baseApi.injectEndpoints({
         method: favorite ? 'POST' : 'DELETE',
         url: `v1/decks/${deckId}/favorite`,
       }),
+    }),getRandomCard: builder.query<CardResponse, GetRandomCardArgs>({
+      providesTags: ['RandomCard'],
+      query: ({ id, previousCardId }) => ({
+        params: { previousCardId },
+        url: `/v1/decks/${id}/learn`,
+      }),
     }),
     updateDeck: builder.mutation<DeckResponse, UpdateDeckArgs>({
-      invalidatesTags: ['Decks'],
+      invalidatesTags: ['Decks','Deck'],
       async onQueryStarted({ id, ...patch }, { dispatch, getState, queryFulfilled }) {
         const state = getState() as RootState
 
@@ -120,5 +139,5 @@ export const {
   useGetDeckCardsQuery,
   useGetDecksQuery,
   useToggleFavoriteMutation,
-  useUpdateDeckMutation,
+  useUpdateDeckMutation,useGetDeckQuery,useGetRandomCardQuery,useUpdateGradeMutation
 } = decksService

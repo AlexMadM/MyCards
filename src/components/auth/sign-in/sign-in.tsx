@@ -36,7 +36,7 @@ export const SignIn = (props: Props) => {
 
   return (
     <>
-      <Card>
+      <Card className={s.card}>
         <Typography className={s.title} variant={'large'}>
           Sign in
         </Typography>

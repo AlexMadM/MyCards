@@ -74,3 +74,31 @@ export type CreateDeckArgs = {
 export type UpdateDeckArgs = { id: Deck['id'] } & Partial<CreateDeckArgs>
 
 export type Tab = 'all' | 'my'
+
+export type CardResponse = {
+  answer: string
+  answerImg: string
+  answerVideo: string
+  created: string
+  deckId: string
+  grade: number
+  id: string
+  question: string
+  questionImg: string
+  questionVideo: string
+  shots: number
+  updated: string
+  userId: string
+}
+
+export type GetRandomCardArgs = {
+  id: string
+  previousCardId?: string
+}
+export type UpdateGradeArgs = {
+  cardId: string
+  grade: number
+  id: string
+}
+
+export type UpdatedCard = Omit<CardResponse, 'grade'>

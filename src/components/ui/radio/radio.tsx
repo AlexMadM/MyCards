@@ -1,54 +1,51 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, forwardRef, useId } from 'react'
 
-import { Typography } from '@/components'
-import * as RadioG from '@radix-ui/react-radio-group'
-import { clsx } from 'clsx'
+import * as RadixRadioGroup from '@radix-ui/react-radio-group'
+import clsx from 'clsx'
 
 import s from './radio.module.scss'
 
-type Option = {
-  label: string
-  value: string
-}
-
 export type RadioGroupProps = {
-  errorMessage?: string
-  options: Option[]
-} & Omit<ComponentPropsWithoutRef<typeof RadioG.Root>, 'children'>
+    errorMessage?: string
+} & ComponentPropsWithoutRef<typeof RadixRadioGroup.Root>
 
-export const RadioGroup = forwardRef<ElementRef<typeof RadioG.Root>, RadioGroupProps>(
-  (props, ref) => {
-    const { errorMessage, options, ...restProps } = props
-
-    return (
-      <RadioGroupRoot {...restProps} ref={ref}>
-        {options.map(option => (
-          <div className={s.label} key={option.value}>
-            <RadioGroupItem id={option.value} value={option.value} />
-            <Typography as={'label'} htmlFor={option.value} variant={'body2'}>
-              {option.label}
-            </Typography>
-          </div>
-        ))}
-      </RadioGroupRoot>
+export const RadioGroup = forwardRef<ElementRef<typeof RadixRadioGroup.Root>, RadioGroupProps>(
+    (
+        { children, className, defaultValue, disabled, errorMessage, onValueChange, value, ...rest },
+        ref
+    ) => (
+        <RadixRadioGroup.Root
+            className={clsx(s.root, className)}
+            defaultValue={defaultValue}
+            disabled={disabled}
+            onValueChange={onValueChange}
+            ref={ref}
+            value={value}
+            {...rest}
+        >
+            {children}
+        </RadixRadioGroup.Root>
     )
-  }
 )
 
-export const RadioGroupRoot = forwardRef<
-  ElementRef<typeof RadioG.Root>,
-  ComponentPropsWithoutRef<typeof RadioG.Root>
->(({ className, ...props }, ref) => {
-  return <RadioG.Root className={clsx(s.root, className)} {...props} ref={ref} />
-})
+export type ItemProps = {
+    label?: string
+} & ComponentPropsWithoutRef<typeof RadixRadioGroup.Item>
 
-export const RadioGroupItem = forwardRef<
-  ElementRef<typeof RadioG.Item>,
-  ComponentPropsWithoutRef<typeof RadioG.Item>
->(({ children, className, ...props }, ref) => {
-  return (
-    <RadioG.Item className={clsx(s.option, className)} ref={ref} {...props}>
-      <div className={s.icon}></div>
-    </RadioG.Item>
-  )
-})
+export const RadioItem = forwardRef<ElementRef<typeof RadixRadioGroup.Item>, ItemProps>(
+    ({ className, id, label, value, ...rest }, ref) => {
+        const generatedId = useId()
+        const finalId = id ?? generatedId
+
+        return (
+            <div className={s.wrapper}>
+                <RadixRadioGroup.Item className={s.item} id={finalId} value={value} {...rest} ref={ref}>
+                    <RadixRadioGroup.Indicator className={s.indicator} />
+                </RadixRadioGroup.Item>
+                <label className={s.label} htmlFor={finalId}>
+                    {label}
+                </label>
+            </div>
+        )
+    }
+)
