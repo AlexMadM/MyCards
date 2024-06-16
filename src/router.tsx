@@ -12,12 +12,17 @@ import { DecksPage } from '@/pages/decks-page/decks-page'
 import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
 import {LearnCardsPage} from "@/pages/learn-cards-page";
 
+import {SignUpPage} from "@/pages/sign-up-page/sign-up";
+
 const publicRoutes: RouteObject[] = [
   {
     children: [
       {
         element: <SignInPage />,
         path: '/login',
+      }, {
+        element: <SignUpPage />,
+        path: '/sign-up',
       },
     ],
     element: <Outlet />,

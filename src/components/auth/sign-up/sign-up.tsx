@@ -31,6 +31,7 @@ type FormType = z.infer<typeof schema>
 
 type Props = {
   onSubmit: (data: Omit<FormType, 'passwordConfirmation'>) => void
+  error?:string
 }
 export const SignUp = (props: Props) => {
   const { control, handleSubmit } = useForm<FormType>({
@@ -82,7 +83,7 @@ export const SignUp = (props: Props) => {
         <Typography className={s.caption} variant={'body2'}>
           Already have an account?
         </Typography>
-        <Typography as={Link} className={s.signInLink} to={'/sign-in'} variant={'link1'}>
+        <Typography as={Link} className={s.signInLink} to={'/login'} variant={'link1'}>
           Sign In
         </Typography>
       </Card>
