@@ -14,9 +14,9 @@ export type User = {
 }
 export type SignUpBody = {
   email: string
-  name: string
   password: string
-  sendConfirmationEmail: boolean
+  rememberMe?: boolean
+    passwordConfirmation: string;
 }
 export type UserData = {
   avatar: string

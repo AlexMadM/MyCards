@@ -27,7 +27,7 @@ export const Header = memo(({ avatar, email, isLoggedIn, onLogout, userName }: H
           <UserDropdown avatar={avatar} email={email} onLogout={onLogout} userName={userName} />
         )}
         {!isLoggedIn && (
-          <Button as={Link} to={'/sign-in'}>
+          <Button as={Link} to={'/login'}>
             Sign In
           </Button>
         )}

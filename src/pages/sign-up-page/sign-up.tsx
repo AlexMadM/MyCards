@@ -1,47 +1,32 @@
-import { useState } from 'react'
+
 
 import { Page, SignUp} from '@/components'
 
 
-import {useNavigateSearch} from "@/hooks/useNavigateSearch";
-import {SignUpBody} from "@/services/auth/auth.types";
+import { SignUpBody} from "@/services/auth/auth.types";
 import {useSignUpMutation} from "@/services/auth/auth.service";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
-export type SignUpData = Pick<SignUpBody, 'email' | 'password'>
+
 
 export const SignUpPage = () => {
     const [signUp] = useSignUpMutation()
-    const navigate = useNavigateSearch()
+    const navigate = useNavigate()
 
-    const [error, setError] = useState('')
-
-    const handleSignUp = async (data: SignUpData) => {
+    const handleSignUp = async (data: SignUpBody) => {
         try {
-            const index = data.email.indexOf('@')
-            let name = ''
-
-            if (index !== -1) {
-                name = data.email.slice(0, index)
-            }
-            const signUpBodyData: SignUpBody = {
-                name,
-                sendConfirmationEmail: true,
-                ...data,
-            }
-
-            await signUp(signUpBodyData).unwrap()
-
-            navigate('/checkEmail', { email: data.email })
+            await signUp(data).unwrap()
+            navigate('/')
         } catch (error: any) {
-            if (error.status === 400) {
-                setError('Email already exists')
-            }
+            console.log(error)
+            toast.error(error?.data?.message ?? 'Could not sign up')
         }
     }
 
     return (
         <Page>
-            <SignUp onSubmit={handleSignUp} error={error}  />
+            <SignUp onSubmit={handleSignUp}   />
         </Page>
     )
 }

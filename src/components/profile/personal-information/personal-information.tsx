@@ -4,9 +4,9 @@ import { Camera, Edit, Logout } from '../../../assets/icons'
 import { Button, Card, Typography } from '../../ui'
 
 type Props = {
-  avatar: string
-  email: string
-  name: string
+  avatar: string | null | undefined
+  email: string | undefined
+  name: string | undefined
   onAvatarChange: (newAvatar: string) => void
   onLogout: () => void
   onNameChange: (newName: string) => void
@@ -37,7 +37,7 @@ export const PersonalInformation = ({
       </Typography>
       <div className={s.photoContainer}>
         <div>
-          <img alt={'avatar'} src={avatar} />
+          <img alt={'avatar'} src={avatar ? avatar : ''} />
           <button className={s.editAvatarButton} onClick={handleAvatarChanged}>
             <Camera />
           </button>

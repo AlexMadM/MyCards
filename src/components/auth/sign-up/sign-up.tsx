@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button, Card, Typography } from '@/components'
 import { ControlledTextField } from '@/components/control/controlled-text-field'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { omit } from 'remeda'
+
 import { z } from 'zod'
 
 import s from './sign-up.module.scss'
@@ -30,8 +30,8 @@ const schema = z
 type FormType = z.infer<typeof schema>
 
 type Props = {
-  onSubmit: (data: Omit<FormType, 'passwordConfirmation'>) => void
-  error?:string
+  onSubmit: (data:FormType) => void
+
 }
 export const SignUp = (props: Props) => {
   const { control, handleSubmit } = useForm<FormType>({
@@ -44,7 +44,7 @@ export const SignUp = (props: Props) => {
     resolver: zodResolver(schema),
   })
   const handleFormSubmitted = handleSubmit(data =>
-    props.onSubmit(omit(data, ['passwordConfirmation']))
+    props.onSubmit(data)
   )
 
   return (

@@ -13,6 +13,7 @@ import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
 import {LearnCardsPage} from "@/pages/learn-cards-page";
 
 import {SignUpPage} from "@/pages/sign-up-page/sign-up";
+import {ProfilePage} from "@/pages/profile-page/profile-page";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -40,6 +41,9 @@ const privateRoutes: RouteObject[] = [
   }, {
     element: <LearnCardsPage />,
     path: '/decks/:deckId/learn',
+  }, {
+    element: <ProfilePage />,
+    path: '/profile',
   },
 ]
 
