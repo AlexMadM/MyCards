@@ -32,11 +32,19 @@ const decksService = baseApi.injectEndpoints({
           )
         }
       },
-      query: body => ({
-        body,
-        method: 'POST',
-        url: `v1/decks`,
-      }),
+      query: body => {
+        const {cover,isPrivate, name}= body
+const formData = new FormData()
+        formData.append('name', name)
+        if(isPrivate){formData.append('isPrivate', isPrivate.toString())}
+        if(cover){formData.append('cover',cover)}
+
+     return {
+          body:formData,
+       method: 'POST',
+       url: `v1/decks`,}
+
+      },
     }),updateGrade: builder.mutation<CardResponse, UpdateGradeArgs>({
       invalidatesTags: ['Cards'],
       query: ({ id, ...args }) => ({

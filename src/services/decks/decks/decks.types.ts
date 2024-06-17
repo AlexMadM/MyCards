@@ -64,9 +64,9 @@ export type GetDecksArgs = {
   name?: null | string
   orderBy?: null | string
 }
-
+export type Nullable<T>=T | null
 export type CreateDeckArgs = {
-  cover?: string
+  cover?: Nullable<File>
   isPrivate?: boolean
   name: string
 }
