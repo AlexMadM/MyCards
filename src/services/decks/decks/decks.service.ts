@@ -131,11 +131,22 @@ const formData = new FormData()
           patchResult.undo()
         }
       },
-      query: ({ id, ...body }) => ({
-        body,
-        method: 'PATCH',
-        url: `v1/decks/${id}`,
-      }),
+      query: ({ id, cover,isPrivate,name }) => {
+          const formData = new FormData()
+
+          if(name){formData.append('name', name)}
+
+          if(isPrivate){formData.append('isPrivate', isPrivate.toString())}
+          if(cover){formData.append('cover',cover)} else if (cover === null) {
+              formData.append('cover', '')
+          }
+
+          return  {
+         body:formData,
+         method: 'PATCH',
+         url: `v1/decks/${id}`,
+     }
+      },
     }),
   }),
 })
