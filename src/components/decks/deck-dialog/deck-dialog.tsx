@@ -1,12 +1,12 @@
 import { useForm } from 'react-hook-form'
 
-import { ControlledCheckbox, ControlledTextField } from '@/components'
+import {Button, ControlledCheckbox, ControlledTextField} from '@/components'
 import { Dialog, DialogProps } from '@/components/ui/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 import s from './deck-dialog.module.scss'
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 
 const newDeckSchema = z.object({
   isPrivate: z.boolean(),
@@ -16,7 +16,7 @@ const newDeckSchema = z.object({
 type FormValues = z.infer<typeof newDeckSchema>
 
 type Props = {
-  defaultValues?: FormValues
+  defaultValues?: { cover?: null | string } & FormValues
   onConfirm: (data: { cover?: File | null } & FormValues) => void
 } & Pick<DialogProps, 'onCancel' | 'onOpenChange' | 'open'>
 export const DeckDialog = ({
@@ -46,10 +46,36 @@ export const DeckDialog = ({
       setCover(file)
     }
   }
+  const removeCoverHandler = () => {
+    setCover(null)
+  }
+  const [preview, setPreview] = useState<null | string>('')
 
+  useEffect(() => {
+    if (defaultValues?.cover) {
+      setPreview(defaultValues?.cover)
+    }
+  }, [defaultValues?.cover])
+  useEffect(() => {
+    if (cover) {
+      // создать ссылку на файл
+      const newPreview = URL.createObjectURL(cover)
+
+      // зачищаем старое превью чтобы не хранилось в памяти
+      if (preview) {
+        URL.revokeObjectURL(preview)
+      }
+      setPreview(newPreview)
+
+      // зачищаем новое превью чтобы не хранилось в памяти
+      return () => URL.revokeObjectURL(newPreview)
+    }
+  }, [cover])
   return (
     <Dialog {...dialogProps} onCancel={handleCancel} onConfirm={onSubmit} title={'Create new deck'}>
       <form className={s.content} onSubmit={onSubmit}>
+        {preview && <img alt={'cover'}
+                                      src={preview} width={'50px'} />}
         <input accept={'image/*'} onChange={uploadHandler} type={'file'}/>
         <ControlledTextField control={control} label={'Deck name'} name={'name'}/>
         <ControlledCheckbox
@@ -57,7 +83,9 @@ export const DeckDialog = ({
             label={'Private'}
             name={'isPrivate'}
             position={'left'}
-        />
+        /><Button onClick={removeCoverHandler} type={'submit'}>
+        Remove image
+      </Button>
       </form>
     </Dialog>
   )
