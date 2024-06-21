@@ -1,9 +1,8 @@
 import { useState } from 'react'
 
-import { DecksTable } from '@/components'
+import { Button, DecksTable, Page, Slider, Spinner, TextField, Typography } from '@/components'
 import { DeckDialog } from '@/components/decks/deck-dialog'
 import { DeleteDeckDialog } from '@/components/decks/delete-deck-dialog'
-import { Button, Page, Slider, Spinner, TextField, Typography } from '@/components/ui'
 import { Pagination } from '@/components/ui/pagination'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDeckSearchParams } from '@/pages/decks-page/use-deck-search-params'
@@ -14,7 +13,7 @@ import {
   useGetDecksQuery,
   useToggleFavoriteMutation,
   useUpdateDeckMutation,
-} from '@/services/decks/decks/decks.service'
+} from '@/services/decks/decks'
 
 import s from './decks-page.module.scss'
 
@@ -173,6 +172,7 @@ export const DecksPage = () => {
           count={decks?.pagination?.totalPages || 1}
           onChange={setCurrentPage}
           page={currentPage ?? 1}
+          perPageOptions={[5, 10, 15, 20]}
         />
       </div>
     </Page>
