@@ -27,7 +27,7 @@ export type PaginationProps = {
   onPerPageChange?: (itemPerPage: number) => void
   page: number
   perPage?: number
-  perPageOptions?: number[]
+  perPageOptions: number[]
   siblings?: number
 } & Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> &
   PaginationConditionals
@@ -73,6 +73,7 @@ export const Pagination: FC<PaginationProps> = ({
 
   const showPerPageSelect = !!perPage && !!perPageOptions && !!onPerPageChange
 
+  // @ts-ignore
   return (
     <div className={classNames.root(className)} {...rest}>
       <div className={classNames.container}>
