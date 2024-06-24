@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { Button, DecksTable, Page, Slider, Spinner, TextField, Typography } from '@/components'
 import { DeckDialog } from '@/components/decks/deck-dialog'
@@ -8,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDeckSearchParams } from '@/pages/decks-page/use-deck-search-params'
 import { useMeQuery } from '@/services/auth/auth.service'
 import {
+  FieldGetDecksArgs,
   useCreateDeckMutation,
   useDeleteDeckMutation,
   useGetDecksQuery,
@@ -22,9 +24,18 @@ export const DecksPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [deckToDeleteId, setDeckToDeleteId] = useState<null | string>(null)
   const [deckToEditId, setDeckToEditId] = useState<null | string>(null)
-
+  const [searchParams, setSearchParams] = useSearchParams({})
   const showEditModal = !!deckToEditId
 
+  const changeFiltersParam = (field: FieldGetDecksArgs, value: null | string) => {
+    const search = Object.fromEntries(searchParams)
+
+    if (field !== 'currentPage') {
+      setSearchParams({ ...search, currentPage: [], [field]: value ?? [] })
+    } else {
+      setSearchParams({ ...search, [field]: value ?? [] })
+    }
+  }
   const {
     currentPage,
     currentTab,
@@ -41,7 +52,7 @@ export const DecksPage = () => {
     setSort,
     sort,
   } = useDeckSearchParams()
-
+  const itemsPerPage = searchParams.get('itemsPerPage') ?? '10'
   const currentUserId = me?.id
   const authorId = currentTab === 'my' ? '~caller' : undefined
   const favoritedBy = currentTab === 'favorites' ? '~caller' : undefined
@@ -49,6 +60,7 @@ export const DecksPage = () => {
     authorId,
     currentPage,
     favoritedBy,
+    itemsPerPage: +itemsPerPage,
     maxCardsCount,
     minCardsCount,
     name: search,
@@ -170,7 +182,9 @@ export const DecksPage = () => {
         <Pagination
           className={s.pagination}
           count={decks?.pagination?.totalPages || 1}
+          itemsPerPage={+itemsPerPage}
           onChange={setCurrentPage}
+          onPerPageChange={value => changeFiltersParam('itemsPerPage', value + '')}
           page={currentPage ?? 1}
           perPageOptions={[5, 10, 15, 20]}
         />

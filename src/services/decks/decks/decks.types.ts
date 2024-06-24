@@ -64,7 +64,7 @@ export type GetDecksArgs = {
   name?: null | string
   orderBy?: null | string
 }
-export type Nullable<T>=T | null
+export type Nullable<T> = T | null
 export type CreateDeckArgs = {
   cover?: Nullable<File>
   isPrivate?: boolean
@@ -102,3 +102,13 @@ export type UpdateGradeArgs = {
 }
 
 export type UpdatedCard = Omit<CardResponse, 'grade'>
+
+export type FieldGetDecksArgs =
+  | 'authorId'
+  | 'currentPage'
+  | 'currentTab'
+  | 'itemsPerPage'
+  | 'maxCardsCount'
+  | 'minCardsCount'
+  | 'name'
+  | 'orderBy'

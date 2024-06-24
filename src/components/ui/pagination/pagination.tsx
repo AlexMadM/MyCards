@@ -9,25 +9,20 @@ import s from './pagination.module.scss'
 
 import { usePagination } from './usePagination'
 
-type PaginationConditionals =
-  | {
-      onPerPageChange: (itemPerPage: number) => void
-      perPage: number
-      perPageOptions: number[]
-    }
-  | {
-      onPerPageChange?: never
-      perPage?: null
-      perPageOptions?: any
-    }
+type PaginationConditionals = {
+  onPerPageChange?: (itemPerPage: number) => void
+  perPage?: number
+  perPageOptions: number[]
+}
 
 export type PaginationProps = {
   count: number
+  itemsPerPage: number
   onChange: (page: number) => void
   onPerPageChange?: (itemPerPage: number) => void
   page: number
   perPage?: number
-  perPageOptions: number[]
+  perPageOptions?: number[]
   siblings?: number
 } & Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> &
   PaginationConditionals
@@ -49,12 +44,14 @@ const classNames = {
 export const Pagination: FC<PaginationProps> = ({
   className,
   count,
+  itemsPerPage,
   onChange,
   onPerPageChange,
   page,
   perPage = null,
   perPageOptions,
   siblings,
+
   ...rest
 }) => {
   const {
@@ -71,7 +68,7 @@ export const Pagination: FC<PaginationProps> = ({
     siblings,
   })
 
-  const showPerPageSelect = !!perPage && !!perPageOptions && !!onPerPageChange
+  const showPerPageSelect = !!itemsPerPage && !!perPageOptions && !!onPerPageChange
 
   // @ts-ignore
   return (
@@ -91,8 +88,8 @@ export const Pagination: FC<PaginationProps> = ({
       {showPerPageSelect && (
         <PerPageSelect
           {...{
+            itemsPerPage,
             onPerPageChange,
-            perPage,
             perPageOptions,
           }}
         />
@@ -168,12 +165,16 @@ const MainPaginationButtons: FC<MainPaginationButtonsProps> = ({
 }
 
 export type PerPageSelectProps = {
+  itemsPerPage: number
   onPerPageChange: (itemPerPage: number) => void
-  perPage: number
   perPageOptions: number[]
 }
 
-export const PerPageSelect = ({ onPerPageChange, perPageOptions }: PerPageSelectProps) => {
+export const PerPageSelect = ({
+  itemsPerPage,
+  onPerPageChange,
+  perPageOptions,
+}: PerPageSelectProps) => {
   return (
     <div className={s.selectWrapper}>
       <Typography as={'span'} variant={'body2'}>
@@ -183,7 +184,7 @@ export const PerPageSelect = ({ onPerPageChange, perPageOptions }: PerPageSelect
         className={s.select}
         onValueChange={page => onPerPageChange(Number(page))}
         pagination
-        value={String(10)}
+        value={String(itemsPerPage)}
       >
         {perPageOptions.map(option => {
           return (
