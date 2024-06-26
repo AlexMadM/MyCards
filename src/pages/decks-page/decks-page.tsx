@@ -66,6 +66,7 @@ export const DecksPage = () => {
     name: search,
     orderBy: sort ? `${sort.key}-${sort.direction}` : undefined,
   })
+
   const resetFilters = () => {
     setCurrentPage(null)
     setSearch(null)

@@ -9,11 +9,10 @@ import {
 import { Layout, useAuthContext } from '@/components/layout'
 import { DeckPage } from '@/pages/deck-page/deck-page'
 import { DecksPage } from '@/pages/decks-page/decks-page'
+import { LearnCardsPage } from '@/pages/learn-cards-page'
+import { ProfilePage } from '@/pages/profile-page/profile-page'
 import { SignInPage } from '@/pages/sign-in-page/sign-in-page'
-import {LearnCardsPage} from "@/pages/learn-cards-page";
-
-import {SignUpPage} from "@/pages/sign-up-page/sign-up";
-import {ProfilePage} from "@/pages/profile-page/profile-page";
+import { SignUpPage } from '@/pages/sign-up-page/sign-up'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -21,7 +20,8 @@ const publicRoutes: RouteObject[] = [
       {
         element: <SignInPage />,
         path: '/login',
-      }, {
+      },
+      {
         element: <SignUpPage />,
         path: '/sign-up',
       },
@@ -38,10 +38,12 @@ const privateRoutes: RouteObject[] = [
   {
     element: <DeckPage />,
     path: '/decks/:deckId',
-  }, {
+  },
+  {
     element: <LearnCardsPage />,
     path: '/decks/:deckId/learn',
-  }, {
+  },
+  {
     element: <ProfilePage />,
     path: '/profile',
   },
