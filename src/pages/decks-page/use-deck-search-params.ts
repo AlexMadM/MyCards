@@ -24,6 +24,12 @@ export function useDeckSearchParams() {
     'maxCards'
   )
   const [search, setSearch] = useQueryParam<string>(searchParams, setSearchParams, 'search')
+  const [searchQuestion, setsearchQuestion] = useQueryParam<string>(
+    searchParams,
+    setSearchParams,
+    'searchQuestion'
+  )
+
   const [currentTab, setCurrentTab] = useQueryParam<string>(
     searchParams,
     setSearchParams,
@@ -63,6 +69,7 @@ export function useDeckSearchParams() {
     minCardsCount,
     rangeValue,
     search,
+    searchQuestion,
     setCurrentPage,
     setCurrentTab,
     setMaxCards,
@@ -70,6 +77,7 @@ export function useDeckSearchParams() {
     setRangeValue,
     setSearch,
     setSort,
+    setsearchQuestion,
     sort,
   }
 }

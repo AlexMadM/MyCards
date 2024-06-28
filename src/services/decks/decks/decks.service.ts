@@ -71,9 +71,14 @@ const decksService = baseApi.injectEndpoints({
       query: ({ id }) => `v1/decks/${id}`,
     }),
 
-    getDeckCards: builder.query<CardsResponse, { id: string }>({
-      query: ({ id }) => `v1/decks/${id}/cards`,
-    }),
+    getDeckCards: builder.query<CardsResponse, { id: string; params?: PaginatedCardsInDeckParams }>(
+      {
+        query: ({ id, params }) => ({
+          params,
+          url: `/v1/decks/${id}/cards`,
+        }),
+      }
+    ),
     getDecks: builder.query<DecksResponse, GetDecksArgs | void>({
       providesTags: ['Decks'],
       query: args => {
@@ -181,3 +186,10 @@ export const {
   useUpdateDeckMutation,
   useUpdateGradeMutation,
 } = decksService
+export type PaginatedCardsInDeckParams = {
+  answer?: number
+  currentPage?: number
+  itemsPerPage?: number
+  orderBy?: string | undefined
+  question?: string
+}

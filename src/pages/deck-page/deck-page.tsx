@@ -10,13 +10,20 @@ import { FieldGetDecksArgs } from '@/services/decks/decks'
 import { useGetDeckByIdQuery, useGetDeckCardsQuery } from '@/services/decks/decks/decks.service'
 
 export const DeckPage = () => {
+  const { searchQuestion, setsearchQuestion } = useDeckSearchParams()
   const { deckId } = useParams()
-
+  const { setSort, sort } = useDeckSearchParams()
   const [currentPage, setCurrentPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams({})
   const { data: deckData } = useGetDeckByIdQuery({ id: deckId || '' })
-  const { data: cardsData } = useGetDeckCardsQuery({ id: deckId || '' })
-  const { setSort, sort } = useDeckSearchParams()
+  const { data: cardsData } = useGetDeckCardsQuery({
+    id: deckId || '',
+    params: {
+      orderBy: sort ? `${sort.key}-${sort.direction}` : undefined,
+      question: searchQuestion || '',
+    },
+  })
+
   const itemsPerPage = searchParams.get('itemsPerPage') ?? '10'
   const changeFiltersParam = (field: FieldGetDecksArgs, value: null | string) => {
     const search = Object.fromEntries(searchParams)
@@ -28,6 +35,9 @@ export const DeckPage = () => {
     }
   }
   const learnLink = `/decks/${deckId}/learn`
+  const handleSearchQuestionChange = (value: string) => {
+    setsearchQuestion(value)
+  }
 
   return (
     <div>
@@ -35,7 +45,11 @@ export const DeckPage = () => {
       <Button as={Link} to={learnLink}>
         Learn
       </Button>
-      <TextField placeholder={'Search cards'} type={'search'} />
+      <TextField
+        onValueChange={handleSearchQuestionChange}
+        placeholder={'Search cards'}
+        type={'search'}
+      />
       <CardsTable cards={cardsData?.items} onSort={setSort} sort={sort} />
       <Pagination
         count={cardsData?.pagination?.totalPages || 1}
