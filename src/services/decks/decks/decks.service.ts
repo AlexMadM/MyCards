@@ -2,11 +2,14 @@ import { baseApi } from '@/services/base-api'
 import {
   CardResponse,
   CardsResponse,
-  CreateDeckArgs, Deck,
+  CreateDeckArgs,
+  Deck,
   DeckResponse,
   DecksResponse,
-  GetDecksArgs, GetRandomCardArgs,
-  UpdateDeckArgs, UpdateGradeArgs,
+  GetDecksArgs,
+  GetRandomCardArgs,
+  UpdateDeckArgs,
+  UpdateGradeArgs,
 } from '@/services/decks/decks/decks.types'
 import { RootState } from '@/services/store'
 import { getValuable } from '@/utils/get-valuable'
@@ -33,25 +36,23 @@ const decksService = baseApi.injectEndpoints({
         }
       },
       query: body => {
-        const {cover,isPrivate, name}= body
-const formData = new FormData()
+        const { cover, isPrivate, name } = body
+        const formData = new FormData()
+
         formData.append('name', name)
-        if(isPrivate){formData.append('isPrivate', isPrivate.toString())}
-        if(cover){formData.append('cover',cover)}
+        if (isPrivate) {
+          formData.append('isPrivate', isPrivate.toString())
+        }
+        if (cover) {
+          formData.append('cover', cover)
+        }
 
-     return {
-          body:formData,
-       method: 'POST',
-       url: `v1/decks`,}
-
+        return {
+          body: formData,
+          method: 'POST',
+          url: `v1/decks`,
+        }
       },
-    }),updateGrade: builder.mutation<CardResponse, UpdateGradeArgs>({
-      invalidatesTags: ['Cards'],
-      query: ({ id, ...args }) => ({
-        body: args,
-        method: 'POST',
-        url: `/v1/decks/${id}/learn`,
-      }),
     }),
     deleteDeck: builder.mutation<void, { id: string }>({
       invalidatesTags: ['Decks'],
@@ -59,7 +60,8 @@ const formData = new FormData()
         method: 'DELETE',
         url: `v1/decks/${id}`,
       }),
-    }),getDeck: builder.query<Deck, { id: string }>({
+    }),
+    getDeck: builder.query<Deck, { id: string }>({
       providesTags: ['Deck'],
       query: ({ id }) => ({
         url: `/v1/decks/${id}`,
@@ -68,6 +70,7 @@ const formData = new FormData()
     getDeckById: builder.query<DeckResponse, { id: string }>({
       query: ({ id }) => `v1/decks/${id}`,
     }),
+
     getDeckCards: builder.query<CardsResponse, { id: string }>({
       query: ({ id }) => `v1/decks/${id}/cards`,
     }),
@@ -80,21 +83,22 @@ const formData = new FormData()
         }
       },
     }),
-    toggleFavorite: builder.mutation<void, { deckId: string; favorite: boolean }>({
-      invalidatesTags: ['Decks'],
-      query: ({ deckId, favorite }) => ({
-        method: favorite ? 'POST' : 'DELETE',
-        url: `v1/decks/${deckId}/favorite`,
-      }),
-    }),getRandomCard: builder.query<CardResponse, GetRandomCardArgs>({
+    getRandomCard: builder.query<CardResponse, GetRandomCardArgs>({
       providesTags: ['RandomCard'],
       query: ({ id, previousCardId }) => ({
         params: { previousCardId },
         url: `/v1/decks/${id}/learn`,
       }),
     }),
+    toggleFavorite: builder.mutation<void, { deckId: string; favorite: boolean }>({
+      invalidatesTags: ['Decks'],
+      query: ({ deckId, favorite }) => ({
+        method: favorite ? 'POST' : 'DELETE',
+        url: `v1/decks/${deckId}/favorite`,
+      }),
+    }),
     updateDeck: builder.mutation<DeckResponse, UpdateDeckArgs>({
-      invalidatesTags: ['Decks','Deck'],
+      invalidatesTags: ['Decks', 'Deck'],
       async onQueryStarted({ id, ...patch }, { dispatch, getState, queryFulfilled }) {
         const state = getState() as RootState
 
@@ -131,22 +135,36 @@ const formData = new FormData()
           patchResult.undo()
         }
       },
-      query: ({ id, cover,isPrivate,name }) => {
-          const formData = new FormData()
+      query: ({ cover, id, isPrivate, name }) => {
+        const formData = new FormData()
 
-          if(name){formData.append('name', name)}
+        if (name) {
+          formData.append('name', name)
+        }
 
-          if(isPrivate){formData.append('isPrivate', isPrivate.toString())}
-          if(cover){formData.append('cover',cover)} else if (cover === null) {
-              formData.append('cover', '')
-          }
+        if (isPrivate) {
+          formData.append('isPrivate', isPrivate.toString())
+        }
+        if (cover) {
+          formData.append('cover', cover)
+        } else if (cover === null) {
+          formData.append('cover', '')
+        }
 
-          return  {
-         body:formData,
-         method: 'PATCH',
-         url: `v1/decks/${id}`,
-     }
+        return {
+          body: formData,
+          method: 'PATCH',
+          url: `v1/decks/${id}`,
+        }
       },
+    }),
+    updateGrade: builder.mutation<CardResponse, UpdateGradeArgs>({
+      invalidatesTags: ['Cards'],
+      query: ({ id, ...args }) => ({
+        body: args,
+        method: 'POST',
+        url: `/v1/decks/${id}/learn`,
+      }),
     }),
   }),
 })
@@ -156,7 +174,10 @@ export const {
   useDeleteDeckMutation,
   useGetDeckByIdQuery,
   useGetDeckCardsQuery,
+  useGetDeckQuery,
   useGetDecksQuery,
+  useGetRandomCardQuery,
   useToggleFavoriteMutation,
-  useUpdateDeckMutation,useGetDeckQuery,useGetRandomCardQuery,useUpdateGradeMutation
+  useUpdateDeckMutation,
+  useUpdateGradeMutation,
 } = decksService

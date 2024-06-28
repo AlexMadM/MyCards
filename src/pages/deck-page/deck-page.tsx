@@ -5,6 +5,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Button, TextField, Typography } from '@/components'
 import { CardsTable } from '@/components/decks/cards-table'
 import { Pagination } from '@/components/ui/pagination'
+import { useDeckSearchParams } from '@/pages/decks-page/use-deck-search-params'
 import { FieldGetDecksArgs } from '@/services/decks/decks'
 import { useGetDeckByIdQuery, useGetDeckCardsQuery } from '@/services/decks/decks/decks.service'
 
@@ -15,7 +16,7 @@ export const DeckPage = () => {
   const [searchParams, setSearchParams] = useSearchParams({})
   const { data: deckData } = useGetDeckByIdQuery({ id: deckId || '' })
   const { data: cardsData } = useGetDeckCardsQuery({ id: deckId || '' })
-
+  const { setSort, sort } = useDeckSearchParams()
   const itemsPerPage = searchParams.get('itemsPerPage') ?? '10'
   const changeFiltersParam = (field: FieldGetDecksArgs, value: null | string) => {
     const search = Object.fromEntries(searchParams)
@@ -35,7 +36,7 @@ export const DeckPage = () => {
         Learn
       </Button>
       <TextField placeholder={'Search cards'} type={'search'} />
-      <CardsTable cards={cardsData?.items} />
+      <CardsTable cards={cardsData?.items} onSort={setSort} sort={sort} />
       <Pagination
         count={cardsData?.pagination?.totalPages || 1}
         itemsPerPage={+itemsPerPage}
