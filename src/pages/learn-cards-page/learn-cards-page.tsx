@@ -1,11 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
 
+import { ArrowBackIcon } from '@/assets/icons/components/arrow-back'
+import { Spinner, Typography } from '@/components'
+import { QuestionForm } from '@/components/ui/question-form'
+import {
+  useGetDeckQuery,
+  useGetRandomCardQuery,
+  useUpdateGradeMutation,
+} from '@/services/decks/decks'
 
 import s from './learn-cards-page.module.scss'
-import {Spinner, Typography} from "@/components";
-import {QuestionForm} from "@/components/ui/question-form";
-import {ArrowBackIcon} from "@/assets/icons/components/arrow-back";
-import {useGetDeckQuery, useGetRandomCardQuery, useUpdateGradeMutation} from "@/services/decks/decks";
 
 export const LearnCardsPage = () => {
   const { deckId = '' } = useParams()

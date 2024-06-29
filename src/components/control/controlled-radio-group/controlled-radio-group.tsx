@@ -33,16 +33,19 @@ import { FieldValues, UseControllerProps, useController } from 'react-hook-form'
 
 import { RadioGroup, RadioGroupProps } from '@/components'
 
-type RadioGroupFormProps<TFieldValues extends FieldValues> = UseControllerProps<TFieldValues> &
-    Omit<RadioGroupProps, 'id' | 'name' | 'onChange' | 'value'>
+type RadioGroupFormProps<TFieldValues extends FieldValues> = Omit<
+  RadioGroupProps,
+  'id' | 'name' | 'onChange' | 'value'
+> &
+  UseControllerProps<TFieldValues>
 
 export const FormRadioGroup = <TFieldValues extends FieldValues = FieldValues>({
-                                                                                 control,
-                                                                                 defaultValue,
-                                                                                 disabled,
-                                                                                 name,
-                                                                                 ...rest
-                                                                               }: RadioGroupFormProps<TFieldValues>) => {
+  control,
+  defaultValue,
+  disabled,
+  name,
+  ...rest
+}: RadioGroupFormProps<TFieldValues>) => {
   const {
     field: { onChange, ref, value },
     fieldState: { error },
@@ -54,12 +57,12 @@ export const FormRadioGroup = <TFieldValues extends FieldValues = FieldValues>({
   })
 
   return (
-      <RadioGroup
-          errorMessage={error?.message}
-          onValueChange={onChange}
-          ref={ref}
-          value={value}
-          {...rest}
-      />
+    <RadioGroup
+      errorMessage={error?.message}
+      onValueChange={onChange}
+      ref={ref}
+      value={value}
+      {...rest}
+    />
   )
 }
