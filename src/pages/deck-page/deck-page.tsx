@@ -4,6 +4,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { Button, TextField, Typography } from '@/components'
 import { CardsTable } from '@/components/decks/cards-table'
+import { BackButton } from '@/components/ui/backButton'
 import { Pagination } from '@/components/ui/pagination'
 import { useDeckSearchParams } from '@/pages/decks-page/use-deck-search-params'
 import { FieldGetDecksArgs } from '@/services/decks/decks'
@@ -42,6 +43,7 @@ export const DeckPage = () => {
   return (
     <div>
       <Typography variant={'large'}>{deckData?.name}</Typography>
+      <BackButton text={'Back to Decks List'} />
       <Button as={Link} to={learnLink}>
         Learn
       </Button>
