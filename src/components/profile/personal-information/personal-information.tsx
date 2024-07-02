@@ -4,7 +4,7 @@ import { Camera, Edit, Logout } from '../../../assets/icons'
 import { Button, Card, Typography } from '../../ui'
 
 type Props = {
-  avatar: string | null | undefined
+  avatar: null | string | undefined
   email: string | undefined
   name: string | undefined
   onAvatarChange: (newAvatar: string) => void
