@@ -1,12 +1,12 @@
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import {Button, ControlledCheckbox, ControlledTextField} from '@/components'
+import { Button, ControlledCheckbox, ControlledTextField } from '@/components'
 import { Dialog, DialogProps } from '@/components/ui/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 import s from './deck-dialog.module.scss'
-import {ChangeEvent, useEffect, useState} from "react";
 
 const newDeckSchema = z.object({
   isPrivate: z.boolean(),
@@ -31,7 +31,7 @@ export const DeckDialog = ({
   })
   const [cover, setCover] = useState<File | null>(null)
   const onSubmit = handleSubmit(data => {
-    onConfirm({...data, cover})
+    onConfirm({ ...data, cover })
     dialogProps.onOpenChange?.(false)
     reset()
   })
@@ -71,21 +71,22 @@ export const DeckDialog = ({
       return () => URL.revokeObjectURL(newPreview)
     }
   }, [cover])
+
   return (
     <Dialog {...dialogProps} onCancel={handleCancel} onConfirm={onSubmit} title={'Create new deck'}>
       <form className={s.content} onSubmit={onSubmit}>
-        {preview && <img alt={'cover'}
-                                      src={preview} width={'50px'} />}
-        <input accept={'image/*'} onChange={uploadHandler} type={'file'}/>
-        <ControlledTextField control={control} label={'Deck name'} name={'name'}/>
+        {preview && <img alt={'cover'} src={preview} width={'50px'} />}
+        <input accept={'image/*'} onChange={uploadHandler} type={'file'} />
+        <ControlledTextField control={control} label={'Deck name'} name={'name'} />
         <ControlledCheckbox
-            control={control}
-            label={'Private'}
-            name={'isPrivate'}
-            position={'left'}
-        /><Button onClick={removeCoverHandler} type={'submit'}>
-        Remove image
-      </Button>
+          control={control}
+          label={'Private'}
+          name={'isPrivate'}
+          position={'left'}
+        />
+        <Button onClick={removeCoverHandler} type={'submit'}>
+          Remove image
+        </Button>
       </form>
     </Dialog>
   )
