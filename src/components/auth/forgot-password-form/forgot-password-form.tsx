@@ -38,7 +38,7 @@ export const ForgotPasswordForm = ({ handlePasswordRecover }: Props) => {
   }
 
   return (
-    <Card as={'form'} className={classNames.card} onSubmit={handleSubmit(onSubmit)}>
+    <Card className={classNames.card} onSubmit={handleSubmit(onSubmit)}>
       <Typography as={'h1'} className={classNames.title} variant={'h1'}>
         Forgot your password?
       </Typography>
